@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROADFIX | Admin Dashboard</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: Arial, sans-serif;
+      background: #f1f5f9; color: #172b45;
+    }
+    header {
+      background: #001d3d; color: white; padding: 20px 5%;
+      display: flex; justify-content: space-between;
+      align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    header h1 { margin: 0; font-size: 25px; }
+    header span { color: #ffc400; }
+    button, select { font: inherit; }
+    .logout {
+      padding: 10px 15px; border: 0; border-radius: 7px;
+      cursor: pointer; font-weight: 700;
+    }
+    main { max-width: 1400px; margin: auto; padding: 28px 20px; }
+    .intro { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .intro h2 { margin: 0 0 8px; }
+    .muted { color: #64748b; }
+    .summary {
+      margin: 22px 0; display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px;
+    }
+    .card {
+      background: white; padding: 20px; border-radius: 12px;
+      box-shadow: 0 3px 12px #0f172a0c;
+    }
+    .number { font-size: 28px; font-weight: 800; margin-top: 8px; }
+    .table-wrap {
+      overflow-x: auto; background: white; border-radius: 12px;
+      box-shadow: 0 3px 12px #0f172a0c;
+    }
+    table { width: 100%; border-collapse: collapse; min-width: 1050px; }
+    th, td {
+      text-align: left; padding: 14px 12px;
+      border-bottom: 1px solid #e2e8f0; vertical-align: top;
+    }
+    th { background: #eaf0f7; font-size: 13px; }
+    td { font-size: 14px; }
+    .priority { font-weight: 800; }
+    .high, .critical { color: #b91c1c; }
+    .medium { color: #b45309; }
+    .low { color: #15803d; }
+    select { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; }
+    .update {
+      display: block; margin-top: 8px; padding: 8px 10px;
+      background: #087cf2; color: white; border: 0;
+      border-radius: 6px; cursor: pointer;
+    }
+    .update:disabled { opacity: .6; }
+    #notice { margin: 18px 0; line-height: 1.5; }
+    .refresh {
+      padding: 10px 14px; background: #087cf2; color: white;
+      border: 0; border-radius: 7px; cursor: pointer;
+    }
+    @media (max-width: 600px) {
+      main { padding: 20px 12px; }
+      header { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ROAD<span>FIX</span> | Admin</h1>
+    <button class="logout" id="logoutButton">Log Out</button>
+  </header>
+
+  <main>
+    <section class="intro">
+      <div>
+        <h2>Complaint Management</h2>
+        <p class="muted">Review citizen reports and maintenance priorities.</p>
+      </div>
+      <button class="refresh" id="refreshButton">Refresh Complaints</button>
+    </section>
+
+    <p id="notice" role="status">Loading complaints...</p>
+
+    <section class="summary">
+      <div class="card">
+        <div class="muted">Total complaints</div>
+        <div class="number" id="totalCount">—</div>
+      </div>
+      <div class="card">
+        <div class="muted">Submitted</div>
+        <div class="number" id="submittedCount">—</div>
+      </div>
+      <div class="card">
+        <div class="muted">In progress</div>
+        <div class="number" id="progressCount">—</div>
+      </div>
+      <div class="card">
+        <div class="muted">Completed</div>
+        <div class="number" id="completedCount">—</div>
+      </div>
+    </section>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tracking ID / Date</th>
+            <th>Citizen</th>
+            <th>Problem / Description</th>
+            <th>Location</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Admin action</th>
+          </tr>
+        </thead>
+        <tbody id="complaintRows">
+          <tr><td colspan="7">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    const API = "http://127.0.0.1:8000";
+    const tokenKey = "roadfix_admin_token";
+    const token = sessionStorage.getItem(tokenKey);
+    const notice = document.getElementById("notice");
+    const rows = document.getElementById("complaintRows");
+
+    if (!token) {
+      window.location.replace("admin-login.html");
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;",
+        '"': "&quot;", "'": "&#39;"
+      })[char]);
+    }
+
+    function authHeaders() {
+      return { "Authorization": `Bearer ${token}` };
+    }
+
+    function dateText(value) {
+      if (!value) return "—";
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? escapeHtml(value) :
+        escapeHtml(date.toLocaleString());
+    }
+
+    function statusOptions(current) {
+      const statuses = ["Submitted", "Assigned", "In Progress", "Completed"];
+      return statuses.map(status =>
+        `<option value="${status}" ${status.toLowerCase() === String(current || "").toLowerCase() ? "selected" : ""}>${status}</option>`
+      ).join("");
+    }
+
+    async function loadComplaints() {
+      notice.textContent = "Loading complaints...";
+      rows.innerHTML = `<tr><td colspan="7">Loading...</td></tr>`;
+
+      try {
+        const response = await fetch(`${API}/api/complaints/`, {
+          headers: authHeaders()
+        });
+
+        if (response.status === 401 || response.status === 403) {
+          sessionStorage.removeItem(tokenKey);
+          window.location.replace("admin-login.html");
+          return;
+        }
+        if (!response.ok) throw new Error(`Could not load complaints (HTTP ${response.status}).`);
+
+        const complaints = await response.json();
+
+        document.getElementById("totalCount").textContent = complaints.length;
+        document.getElementById("submittedCount").textContent =
+          complaints.filter(c => (c.status || "").toLowerCase() === "submitted").length;
+        document.getElementById("progressCount").textContent =
+          complaints.filter(c => (c.status || "").toLowerCase() === "in progress").length;
+        document.getElementById("completedCount").textContent =
+          complaints.filter(c => (c.status || "").toLowerCase() === "completed").length;
+
+        if (!complaints.length) {
+          rows.innerHTML = `<tr><td colspan="7">No complaints found.</td></tr>`;
+        } else {
+          rows.innerHTML = complaints.map(c => {
+            const priority = String(c.priority || "Unknown").toLowerCase();
+            return `
+              <tr>
+                <td>
+                  <strong>${escapeHtml(c.tracking_id)}</strong><br>
+                  <span class="muted">${dateText(c.created_at)}</span>
+                </td>
+                <td>
+                  ${escapeHtml(c.name)}<br>
+                  <span class="muted">${escapeHtml(c.phone)}</span>
+                </td>
+                <td>
+                  <strong>${escapeHtml(c.problem_type)}</strong><br>
+                  ${escapeHtml(c.description)}<br>
+                  <span class="muted">Severity: ${escapeHtml(c.severity)}</span>
+                </td>
+                <td>
+                  ${escapeHtml(c.latitude)}, ${escapeHtml(c.longitude)}<br>
+                  <span class="muted">Traffic: ${escapeHtml(c.traffic_level)}</span><br>
+                  School zone: ${c.school_zone ? "Yes" : "No"}
+                </td>
+                <td>
+                  <span class="priority ${escapeHtml(priority)}">${escapeHtml(c.priority)}</span><br>
+                  Score: ${escapeHtml(c.priority_score)}
+                </td>
+                <td>${escapeHtml(c.status)}</td>
+                
+<td>
+  <select id="status-${Number(c.id)}" aria-label="New status for ${escapeHtml(c.tracking_id)}">
+    ${statusOptions(c.status)}
+  </select>
+
+  <button class="update" data-id="${Number(c.id)}"
+    data-tracking="${escapeHtml(c.tracking_id)}">Update</button>
+
+  <div class="photo-upload" style="margin-top:12px;">
+    <input
+      type="file"
+      class="after-photo-input"
+      accept="image/jpeg,image/png,image/webp"
+      aria-label="Choose after-repair photo for ${escapeHtml(c.tracking_id)}"
+    />
+
+    <button
+      type="button"
+      class="upload-after-photo-btn update"
+      data-tracking-id="${escapeHtml(c.tracking_id)}">
+      Upload After Photo
+    </button>
+
+    <span class="photo-upload-message" aria-live="polite"></span>
+  </div>
+</td>
+              </tr>`;
+          }).join("");
+        }
+
+        notice.textContent = `Loaded ${complaints.length} complaint(s).`;
+        notice.style.color = "#166534";
+      } catch (error) {
+        notice.textContent = error.message === "Failed to fetch"
+          ? "Cannot connect to the backend. Start FastAPI and check its address."
+          : error.message;
+        notice.style.color = "#b91c1c";
+        rows.innerHTML = `<tr><td colspan="7">Unable to load complaints.</td></tr>`;
+      }
+    }
+
+    rows.addEventListener("click", async event => {
+      const button = event.target.closest("button[data-tracking]");
+      if (!button) return;
+
+      const trackingId = button.dataset.tracking;
+      const select = document.getElementById(`status-${button.dataset.id}`);
+      
+const newStatus = select.value;
+// Prevent unnecessary requests if the status is already current.
+const row = button.closest("tr");
+const displayedStatus = row?.querySelector("td:nth-child(6)")?.textContent.trim();
+
+if (newStatus === displayedStatus) {
+  notice.textContent = `Complaint ${trackingId} is already ${newStatus}.`;
+  notice.style.color = "#64748b";
+  return;
+}
+
+if (newStatus === "Submitted") {
+  notice.textContent =
+    "Submitted is the initial status. Choose Assigned or In Progress.";
+  notice.style.color = "#b45309";
+  return;
+}
+
+// Completion must go through the verified work-order workflow.
+if (newStatus === "Completed") {
+  notice.textContent =
+    `To complete ${trackingId}, finish its work order and record an approved verification first. Then refresh the complaints list.`;
+  notice.style.color = "#b45309";
+  return;
+}
+
+button.disabled = true;
+      notice.textContent = `Updating ${trackingId}...`;
+
+      try {
+        const response = await fetch(
+          `${API}/api/complaints/${encodeURIComponent(trackingId)}/status`,
+          {
+            method: "PATCH",
+            headers: {
+              ...authHeaders(),
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ status: newStatus })
+          }
+        );
+
+        const data = await response.json();
+        if (response.status === 401 || response.status === 403) {
+          sessionStorage.removeItem(tokenKey);
+          window.location.replace("admin-login.html");
+          return;
+        }
+        if (!response.ok) throw new Error(data.detail || "Status update failed.");
+
+        notice.textContent = `Complaint ${trackingId} updated to ${data.status}.`;
+        notice.style.color = "#166534";
+        await loadComplaints();
+      } catch (error) {
+        notice.textContent = error.message;
+        notice.style.color = "#b91c1c";
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+rows.addEventListener("click", async event => {
+  const uploadButton = event.target.closest(".upload-after-photo-btn");
+  if (!uploadButton) return;
+
+  const container = uploadButton.closest(".photo-upload");
+  const input = container.querySelector(".after-photo-input");
+  const message = container.querySelector(".photo-upload-message");
+  const file = input.files[0];
+
+  if (!file) {
+    message.textContent = "Choose a photo first.";
+    message.style.color = "#b91c1c";
+    return;
+  }
+
+  const trackingId = uploadButton.dataset.trackingId;
+  const formData = new FormData();
+
+  // The backend endpoint must expect the field name "file".
+  formData.append("file", file);
+
+  uploadButton.disabled = true;
+  message.textContent = "Uploading...";
+  message.style.color = "#64748b";
+
+  try {
+    const response = await fetch(
+      `${API}/api/complaints/${encodeURIComponent(trackingId)}/after-photo`,
+      {
+        method: "POST",
+        headers: authHeaders(),
+        body: formData
+      }
+    );
+
+    const data = await response.json().catch(() => ({}));
+
+    if (response.status === 401 || response.status === 403) {
+      sessionStorage.removeItem(tokenKey);
+      window.location.replace("admin-login.html");
+      return;
+    }
+
+    if (!response.ok) {
+      throw new Error(data.detail || `Upload failed (HTTP ${response.status}).`);
+    }
+
+    message.textContent = "After-repair photo uploaded successfully.";
+    message.style.color = "#166534";
+    input.value = "";
+  } catch (error) {
+    message.textContent = error.message || "Photo upload failed.";
+    message.style.color = "#b91c1c";
+  } finally {
+    uploadButton.disabled = false;
+  }
+});
+    document.getElementById("refreshButton").addEventListener("click", loadComplaints);
+
+    document.getElementById("logoutButton").addEventListener("click", () => {
+      sessionStorage.removeItem(tokenKey);
+      window.location.replace("admin-login.html");
+    });
+
+    if (token) loadComplaints();
+  </script>
+</body>
+</html>

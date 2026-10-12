@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROADFIX - Road Problem Reporting</title>
+<link rel="stylesheet" href="css/roadfix-modern.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{min-height:100vh;background:linear-gradient(135deg,#eaf4ff,#fff);padding:30px;margin:0}
+.container{width:100%;max-width:1000px;margin:auto;background:#fff;padding:35px;border-radius:18px;box-shadow:0 10px 35px rgba(0,0,0,.12)}
+.header{text-align:center;margin-bottom:25px}.header h1{color:#12395b;font-size:32px;margin-bottom:8px}.header p{color:#666;font-size:16px}
+.selected-problem{background:#1976d2;color:white;padding:20px 25px;border-radius:14px;margin-bottom:25px;box-shadow:0 6px 15px rgba(25,118,210,.2)}
+.selected-problem small{font-size:12px;font-weight:bold;letter-spacing:1px;opacity:.9}.selected-problem h2{margin-top:6px;font-size:24px}
+.section{border:1px solid #e1e8ef;border-radius:14px;padding:25px;margin-bottom:25px;background:#fff}.section h2{color:#183b56;margin-bottom:20px;font-size:24px}
+.form-group{margin-bottom:18px}.form-group label,.upload-box label{display:block;font-weight:bold;color:#333;margin-bottom:8px;font-size:15px}
+.form-group input,.form-group textarea,.upload-box input{width:100%;padding:13px;border:1px solid #ccd6df;border-radius:8px;font-size:15px;outline:none;background:#fafafa}
+.form-group textarea{resize:vertical;min-height:120px}.form-group input:focus,.form-group textarea:focus{border-color:#1976d2;background:#fff;box-shadow:0 0 0 3px rgba(25,118,210,.08)}
+.required{color:red}.note{color:#6b7280;font-size:13px;margin-top:8px;line-height:1.5}
+.map{width:100%;height:420px;min-height:420px;border-radius:14px;overflow:hidden;background:#e5e7eb;border:1px solid #d8e0e8}
+.location-button{background:#1976d2;color:white;border:none;padding:13px 20px;border-radius:8px;cursor:pointer;font-size:15px}.location-button:hover{background:#125da8}
+#locationStatus{color:#555;line-height:1.5}.coordinates-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.coordinate-card{padding:14px 16px;border-radius:10px;background:#f5f8fb;border:1px solid #e3eaf1}.coordinate-label{color:#8291a1;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}.coordinate-value{color:#12263a;font-size:14px;font-weight:700;word-break:break-all}
+.buttons{display:flex;justify-content:space-between;gap:15px;margin-top:30px}.btn{padding:13px 25px;border-radius:8px;border:none;cursor:pointer;font-size:15px;font-weight:bold}.back-btn{background:#e5e7eb;color:#333}.submit-btn{background:#1976d2;color:#fff}.submit-btn:disabled{opacity:.65;cursor:wait}
+@media(max-width:700px){body{padding:15px}.container{padding:22px}.header h1{font-size:27px}.selected-problem h2{font-size:20px}.buttons{flex-direction:column}.coordinates-grid{grid-template-columns:1fr}.map{height:330px;min-height:330px}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="header"><h1>ROADFIX</h1><p>Road Problem Reporting</p></div>
+  <div class="selected-problem"><small>SELECTED PROBLEM</small><h2 id="selectedProblem">Loading...</h2></div>
+
+  <div class="section">
+    <h2>Reporter Details</h2>
+    <div class="form-group"><label for="reporterName">Full Name <span class="required">*</span></label><input type="text" id="reporterName" placeholder="Enter your full name" required></div>
+    <div class="form-group"><label for="phoneNumber">Phone Number <span class="required">*</span></label><input type="tel" id="phoneNumber" placeholder="Enter your 10-digit phone number" maxlength="10" required></div>
+    <div class="form-group"><label for="problemDescription">Problem Description <span class="required">*</span></label><textarea id="problemDescription" placeholder="Explain the road problem in detail..." rows="5" maxlength="500" required></textarea><p class="note">Please describe the problem clearly, including nearby landmarks if possible.</p></div>
+  </div>
+
+  <div class="section">
+    <h2>Upload Photo</h2>
+    <div class="upload-box"><label for="beforePhoto">Before Work Photo <span class="required">*</span></label><input type="file" id="beforePhoto" accept="image/*" required></div>
+  </div>
+
+  <div class="section">
+    <h2>Select Road Location</h2>
+    <p style="color:#5f7183;font-size:14px;margin-bottom:16px;line-height:1.6">Select the exact location of the road problem. Click anywhere on the map to place the pin, or drag the pin to adjust the location.</p>
+    <div id="map" class="map"></div>
+
+<div style="margin-top:16px;padding:16px;background:#f5f8fb;border:1px solid #d8e0e8;border-radius:10px">
+  <h3>Enter Location Coordinates</h3>
+  <p>If the map does not load, enter the coordinates of the road problem.</p>
+
+  <label for="manualLatitude">Latitude</label>
+  <input id="manualLatitude" type="number" step="any"
+         min="-90" max="90" placeholder="e.g. 17.3850"
+         style="width:100%;padding:12px;margin:8px 0 14px">
+
+  <label for="manualLongitude">Longitude</label>
+  <input id="manualLongitude" type="number" step="any"
+         min="-180" max="180" placeholder="e.g. 78.4867"
+         style="width:100%;padding:12px;margin:8px 0 14px">
+
+  <button type="button" class="location-button"
+          onclick="useManualCoordinates()">
+    Use These Coordinates
+  </button>
+</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px">
+      <button type="button" class="location-button" onclick="getLocation()">📍 Use My Current Location</button>
+      <button type="button" class="location-button" onclick="confirmSelectedLocation()" style="background:#16a36a">✓ Confirm Location</button>
+    </div>
+    <p id="locationStatus" style="margin-top:14px;margin-bottom:12px">Click anywhere on the map to select the road location.</p>
+    <div class="coordinates-grid">
+      <div class="coordinate-card"><div class="coordinate-label">Latitude</div><div id="latitudeDisplay" class="coordinate-value">Not selected</div></div>
+      <div class="coordinate-card"><div class="coordinate-label">Longitude</div><div id="longitudeDisplay" class="coordinate-value">Not selected</div></div>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button type="button" class="btn back-btn" onclick="goBack()">← Back</button>
+    <button type="button" class="btn submit-btn" onclick="submitProblem()">Submit Problem</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+const selectedProblem = localStorage.getItem("selectedProblem") || "Other";
+document.getElementById("selectedProblem").textContent = selectedProblem;
+
+let latitude = "";
+let longitude = "";
+let map = null;
+let locationMarker = null;
+let locationConfirmed = false;
+
+const DEFAULT_LATITUDE = 17.3850;
+const DEFAULT_LONGITUDE = 78.4867;
+const API_BASE = "http://127.0.0.1:8000";
+
+
+
+
+function initializeMap() {
+  const status = document.getElementById("locationStatus");
+
+  if (typeof L === "undefined") {
+    status.textContent =
+      "Map library did not load. Use your current location or enter coordinates manually.";
+    return;
+  }
+
+  map = L.map("map").setView(
+    [DEFAULT_LATITUDE, DEFAULT_LONGITUDE],
+    12
+  );
+
+  // Map tiles are optional. The location controls can still work
+  // even when the tile provider is unreachable.
+  const tileLayer = L.tileLayer(
+    "https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png",
+    {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap contributors"
+    }
+  );
+
+  let tilesLoaded = false;
+
+  tileLayer.on("tileerror", function () {
+    if (!tilesLoaded) {
+      status.textContent =
+        "Map images could not load. Use Current Location or enter coordinates manually below.";
+    }
+  });
+
+  tileLayer.on("load", function () {
+    tilesLoaded = true;
+    status.textContent =
+      "Map loaded. Click the map to select the road location.";
+  });
+
+  tileLayer.addTo(map);
+
+  map.on("click", function (event) {
+    setSelectedLocation(
+      event.latlng.lat,
+      event.latlng.lng
+    );
+  });
+
+  setTimeout(function () {
+    map.invalidateSize(true);
+  }, 500);
+}
+function updateLocationDisplay() {
+  document.getElementById("latitudeDisplay").textContent = latitude || "Not selected";
+  document.getElementById("longitudeDisplay").textContent = longitude || "Not selected";
+  document.getElementById("locationStatus").textContent = "Location selected. Drag the pin to adjust it, then confirm the location.";
+}
+
+
+function setSelectedLocation(lat, lng) {
+  latitude = Number(lat);
+  longitude = Number(lng);
+  locationConfirmed = false;
+
+  updateLocationDisplay();
+
+  if (map) {
+    if (locationMarker) {
+      locationMarker.setLatLng([latitude, longitude]);
+    } else {
+      locationMarker = L.marker(
+        [latitude, longitude],
+        { draggable: true }
+      ).addTo(map);
+
+      locationMarker.on("dragend", function (event) {
+        const position = event.target.getLatLng();
+        setSelectedLocation(position.lat, position.lng);
+      });
+    }
+
+    locationMarker.bindPopup("Selected road problem location").openPopup();
+  }
+}
+
+function getLocation() {
+  const status = document.getElementById("locationStatus");
+
+  if (!navigator.geolocation) {
+    status.textContent =
+      "Location is not supported by this browser. Enter coordinates manually.";
+    return;
+  }
+
+  status.textContent = "Requesting your location. Please allow browser access.";
+
+  navigator.geolocation.getCurrentPosition(
+    function (position) {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      latitude = lat;
+      longitude = lng;
+      locationConfirmed = false;
+
+      updateLocationDisplay();
+
+      // Move the map and marker only if Leaflet initialized successfully.
+      if (map) {
+        map.setView([lat, lng], 16);
+        setSelectedLocation(lat, lng);
+      }
+
+      status.textContent =
+        "Current location found. Confirm it before submitting.";
+    },
+    function (error) {
+      if (error.code === 1) {
+        status.textContent =
+          "Location permission denied. Allow location access in Chrome, or enter coordinates manually.";
+      } else if (error.code === 2) {
+        status.textContent =
+          "Current location is unavailable. Enter coordinates manually.";
+      } else {
+        status.textContent =
+          "Location request timed out. Try again or enter coordinates manually.";
+      }
+    },
+    {
+      enableHighAccuracy: false,
+      timeout: 20000,
+      maximumAge: 60000
+    }
+  );
+}
+function useManualCoordinates() {
+  const latText = document.getElementById("manualLatitude").value.trim();
+  const lngText = document.getElementById("manualLongitude").value.trim();
+  const status = document.getElementById("locationStatus");
+
+  if (latText === "" || lngText === "") {
+    status.textContent = "Enter both latitude and longitude.";
+    return;
+  }
+
+  const lat = Number(latText);
+  const lng = Number(lngText);
+
+  if (
+    !Number.isFinite(lat) ||
+    !Number.isFinite(lng) ||
+    lat < -90 || lat > 90 ||
+    lng < -180 || lng > 180
+  ) {
+    status.textContent = "Enter valid coordinates.";
+    return;
+  }
+
+  latitude = lat;
+  longitude = lng;
+  locationConfirmed = true;
+
+  updateLocationDisplay();
+  status.textContent = "✓ Coordinates selected and confirmed.";
+}
+function confirmSelectedLocation() {
+  const status = document.getElementById("locationStatus");
+  if (latitude === "" || longitude === "") {
+    status.textContent = "Please select a location on the map first.";
+    return;
+  }
+  locationConfirmed = true;
+  status.textContent = "✓ Location confirmed successfully.";
+}
+
+function goBack() {
+  window.location.href = "report.html";
+}
+
+async function submitProblem() {
+  const reporterName = document.getElementById("reporterName").value.trim();
+  const phoneNumber = document.getElementById("phoneNumber").value.trim();
+  const problemDescription = document.getElementById("problemDescription").value.trim();
+  const photoInput = document.getElementById("beforePhoto");
+  const submitButton = document.querySelector(".submit-btn");
+
+  if (!reporterName) return alert("Please enter your full name.");
+  if (!/^[0-9]{10}$/.test(phoneNumber)) return alert("Please enter a valid 10-digit phone number.");
+  if (!problemDescription) return alert("Please explain the road problem.");
+  if (!photoInput.files || !photoInput.files.length) return alert("Please upload the Before Work Photo.");
+  if (latitude === "" || longitude === "") return alert("Please select the road location on the map.");
+  if (!locationConfirmed) {
+    const proceed = confirm("You have selected a location but have not confirmed it. Submit this location anyway?");
+    if (!proceed) return;
+  }
+
+  submitButton.disabled = true;
+  submitButton.textContent = "Submitting...";
+
+  try {
+    const formData = new FormData();
+    formData.append("name", reporterName);
+    formData.append("phone", phoneNumber);
+    formData.append("problem_type", selectedProblem);
+    formData.append("description", problemDescription);
+    formData.append("latitude", latitude);
+    formData.append("longitude", longitude);
+    formData.append("severity", "Medium");
+    formData.append("traffic_level", "Medium");
+    formData.append("school_zone", "false");
+    formData.append("photo", photoInput.files[0]);
+
+    const response = await fetch(`${API_BASE}/api/complaints/`, {
+      method: "POST",
+      body: formData
+    });
+
+    let result;
+    try {
+      result = await response.json();
+    } catch {
+      throw new Error(`The server returned an unreadable response (HTTP ${response.status}).`);
+    }
+
+    if (!response.ok) {
+      const detail = typeof result.detail === "string" ? result.detail : JSON.stringify(result.detail || result);
+      throw new Error(detail || `Submission failed (HTTP ${response.status}).`);
+    }
+
+    if (!result.success || !result.tracking_id) {
+      throw new Error(result.message || "The server did not return a tracking ID.");
+    }
+
+    const trackingNumber = result.tracking_id;
+    const reportData = {
+      trackingNumber,
+      tracking_id: trackingNumber,
+      problem: selectedProblem,
+      reporterName,
+      phoneNumber,
+      problemDescription,
+      latitude,
+      longitude,
+      locationConfirmed,
+      beforePhoto: photoInput.files[0].name,
+      status: result.status || "Submitted",
+      priority: result.priority,
+      priority_score: result.priority_score,
+      submittedAt: new Date().toLocaleString()
+    };
+
+    localStorage.setItem("roadfixReport", JSON.stringify(reportData));
+    localStorage.setItem("roadfixTrackingNumber", trackingNumber);
+
+    window.location.href = "confirmation.html?id=" + encodeURIComponent(trackingNumber);
+  } catch (error) {
+    console.error("ROADFIX submission error:", error);
+    alert(
+      "Could not submit your complaint.\\n\\n" +
+      error.message +
+      "\\n\\nCheck that the backend is running, then try again."
+    );
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Submit Problem";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", initializeMap);
+</script>
+</body>
+</html>

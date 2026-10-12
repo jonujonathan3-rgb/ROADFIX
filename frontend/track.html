@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROADFIX - Track Complaint</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { min-height: 100vh; background: linear-gradient(135deg,#dceeff 0%,#f7fbff 45%,#fff 100%); padding: 30px 20px; color: #222; }
+        .container { width: 100%; max-width: 900px; margin: auto; background: rgba(255,255,255,.96); padding: 40px; border-radius: 24px; box-shadow: 0 15px 45px rgba(0,52,100,.14); border: 1px solid #e3edf6; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { display: inline-block; background: #1976d2; color: #fff; padding: 8px 18px; border-radius: 30px; font-size: 13px; font-weight: bold; letter-spacing: 1.5px; margin-bottom: 12px; box-shadow: 0 5px 15px rgba(25,118,210,.2); }
+        .header h1 { color: #12395b; font-size: 34px; margin-bottom: 8px; }
+        .header h1 span { color: #1976d2; }
+        .header p { color: #667788; font-size: 16px; }
+        .search-box { background: linear-gradient(135deg,#f1f8ff,#f9fcff); border: 1px solid #d9e8f5; border-radius: 16px; padding: 25px; margin-bottom: 25px; }
+        .search-box label { display: block; color: #183b56; font-weight: bold; margin-bottom: 10px; }
+        .search-row { display: flex; gap: 12px; }
+        .search-row input { flex: 1; min-width: 0; padding: 15px; border: 1px solid #ccd9e5; border-radius: 10px; font-size: 16px; outline: none; text-transform: uppercase; background: white; }
+        .search-row input:focus { border-color: #1976d2; box-shadow: 0 0 0 4px rgba(25,118,210,.1); }
+        .search-button { background: linear-gradient(135deg,#1976d2,#125da8); color: white; border: none; border-radius: 10px; padding: 14px 28px; font-size: 15px; font-weight: bold; cursor: pointer; transition: .25s; box-shadow: 0 6px 15px rgba(25,118,210,.2); }
+        .search-button:hover { transform: translateY(-2px); }
+        .search-button:disabled { opacity: .65; cursor: wait; transform: none; }
+        .message { display: none; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-weight: bold; overflow-wrap: anywhere; }
+        .message.error { display: block; background: #fff0f0; color: #c62828; border: 1px solid #ffcaca; }
+        .message.success { display: block; background: #edf9f0; color: #18733a; border: 1px solid #c5e8ce; }
+        .report { display: none; animation: fadeIn .4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .tracking-number { background: linear-gradient(135deg,#1976d2,#0d5da8); color: white; padding: 25px; border-radius: 17px; text-align: center; margin-bottom: 25px; box-shadow: 0 10px 25px rgba(25,118,210,.2); }
+        .tracking-number small { display: block; font-size: 12px; letter-spacing: 1.5px; margin-bottom: 8px; opacity: .9; }
+        .tracking-number h2 { font-size: 28px; letter-spacing: 1px; overflow-wrap: anywhere; }
+        .details,.status-section { background: white; border: 1px solid #e1e8ef; border-radius: 16px; padding: 24px; margin-bottom: 25px; box-shadow: 0 5px 18px rgba(0,0,0,.04); }
+        .details h2,.status-section h2 { color: #183b56; font-size: 21px; margin-bottom: 15px; padding-bottom: 12px; border-bottom: 2px solid #edf3f8; }
+        .detail-row { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid #edf0f2; }
+        .detail-row:last-child { border-bottom: none; }
+        .label { color: #687887; font-weight: bold; }
+        .value { color: #222; text-align: right; font-weight: 500; overflow-wrap: anywhere; }
+        #currentStatus { background: #e8f5e9; color: #16803b; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; }
+        .status-section h2 { margin-bottom: 28px; }
+        .timeline { position: relative; padding-left: 42px; }
+        .timeline::before { content: ""; position: absolute; left: 10px; top: 10px; bottom: 10px; width: 3px; background: #dce6ef; border-radius: 5px; }
+        .status-item { position: relative; margin-bottom: 28px; padding: 2px 0; }
+        .status-item:last-child { margin-bottom: 0; }
+        .status-dot { position: absolute; left: -42px; top: 0; width: 23px; height: 23px; border-radius: 50%; background: #dce6ef; border: 5px solid white; box-shadow: 0 0 0 1px #cbd8e3; }
+        .status-item.completed .status-dot { background: #20a05a; box-shadow: 0 0 0 1px #20a05a,0 3px 8px rgba(32,160,90,.25); }
+        .status-item.current .status-dot { background: #1976d2; box-shadow: 0 0 0 4px rgba(25,118,210,.14); }
+        .status-item h3 { color: #444; font-size: 16px; margin-bottom: 6px; }
+        .status-item p { color: #7a8792; font-size: 13px; line-height: 1.5; }
+        .status-item.completed h3 { color: #20a05a; }
+        .status-item.current h3 { color: #1976d2; }
+        .buttons { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 5px; }
+        .button { border: none; padding: 14px 25px; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; transition: .25s; }
+        .home-button { background: #e8f1f8; color: #12395b; border: 1px solid #d3e2ee; }
+        .back-button { background: #f0f1f3; color: #333; border: 1px solid #e0e2e5; }
+        .new-button { background: linear-gradient(135deg,#1976d2,#125da8); color: white; box-shadow: 0 6px 15px rgba(25,118,210,.18); }
+        .button:hover { transform: translateY(-2px); }
+        .footer { text-align: center; margin-top: 25px; color: #8a98a5; font-size: 12px; }
+        @media (max-width:650px) {
+            body { padding: 15px; } .container { padding: 25px 18px; border-radius: 18px; }
+            .header h1 { font-size: 28px; } .search-row { flex-direction: column; }
+            .search-button { width: 100%; } .detail-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+            .value { text-align: left; } #currentStatus { display: inline-block; }
+            .tracking-number h2 { font-size: 21px; } .status-section { padding: 20px; }
+            .buttons { flex-direction: column; } .button { width: 100%; }
+        }
+    </style>
+    <link rel="stylesheet" href="css/roadfix-modern.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">ROADFIX</div>
+        <h1>Track Your <span>Road Complaint</span></h1>
+        <p>Check the current status of your reported road problem</p>
+    </div>
+
+    <div class="search-box">
+        <label for="trackingInput">Enter Report Tracking Number</label>
+        <div class="search-row">
+            <input type="text" id="trackingInput" placeholder="e.g. RDF-20261009-6505" autocomplete="off" aria-label="Report tracking number">
+            <button id="trackButton" class="search-button" type="button" onclick="trackComplaint()">🔎 Track Complaint</button>
+        </div>
+    </div>
+
+    <div id="message" class="message" role="status" aria-live="polite"></div>
+
+    <div id="report" class="report">
+        <div class="tracking-number">
+            <small>REPORT TRACKING NUMBER</small>
+            <h2 id="displayTrackingNumber">-</h2>
+        </div>
+
+        <div class="details">
+            <h2>📋 Complaint Details</h2>
+            <div class="detail-row"><span class="label">Problem</span><span class="value" id="problem">-</span></div>
+            <div class="detail-row"><span class="label">Reporter</span><span class="value" id="reporterName">-</span></div>
+            <div class="detail-row"><span class="label">Submitted On</span><span class="value" id="submittedAt">-</span></div>
+            <div class="detail-row"><span class="label">Current Status</span><span class="value" id="currentStatus">-</span></div>
+            <div class="detail-row"><span class="label">Priority</span><span class="value" id="priority">-</span></div>
+            <div class="detail-row"><span class="label">Description</span><span class="value" id="description">-</span></div>
+        </div>
+
+        <div class="status-section">
+            <h2>🚦 Complaint Status</h2>
+            <div class="timeline">
+                <div class="status-item" id="statusSubmitted"><div class="status-dot"></div><h3>Report Submitted</h3><p>Your road problem has been successfully registered.</p></div>
+                <div class="status-item" id="statusVerified"><div class="status-dot"></div><h3>Authority Verification</h3><p>The reported problem will be reviewed by the concerned authority.</p></div>
+                <div class="status-item" id="statusAssigned"><div class="status-dot"></div><h3>Contractor Assigned</h3><p>A contractor will be assigned for the required work.</p></div>
+                <div class="status-item" id="statusWork"><div class="status-dot"></div><h3>Work In Progress</h3><p>Road repair or safety work is currently in progress.</p></div>
+                <div class="status-item" id="statusCompleted"><div class="status-dot"></div><h3>Completed</h3><p>The reported problem has been resolved and verified.</p></div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="button home-button" type="button" onclick="goHome()">🏠 Home</button>
+            <button class="button new-button" type="button" onclick="newSearch()">🔎 Track Another Report</button>
+            <button class="button back-button" type="button" onclick="goBack()">← Back</button>
+        </div>
+    </div>
+    <div class="footer">ROADFIX • Road Maintenance &amp; Safety Management</div>
+</div>
+
+<script>
+const API_BASE = "http://127.0.0.1:8000";
+
+function showMessage(text, type = "error") {
+    const message = document.getElementById("message");
+    message.className = "message " + type;
+    message.textContent = text;
+}
+
+async function trackComplaint() {
+    const inputElement = document.getElementById("trackingInput");
+    // Normalize spaces and casing; don't reject IDs using a brittle client-side pattern.
+    const trackingId = inputElement.value.trim().toUpperCase().replace(/\s+/g, "");
+    const message = document.getElementById("message");
+    const reportPanel = document.getElementById("report");
+    const button = document.getElementById("trackButton");
+
+    message.className = "message";
+    message.textContent = "";
+
+    if (!trackingId) {
+        reportPanel.style.display = "none";
+        showMessage("Please enter your Report Tracking Number.");
+        inputElement.focus();
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Searching…";
+
+    try {
+        const response = await fetch(
+            `${API_BASE}/api/complaints/${encodeURIComponent(trackingId)}`,
+            { headers: { "Accept": "application/json" } }
+        );
+
+        const responseText = await response.text();
+        let data = null;
+        try {
+            data = responseText ? JSON.parse(responseText) : null;
+        } catch {
+            data = null;
+        }
+
+        if (!response.ok) {
+            reportPanel.style.display = "none";
+            if (response.status === 404) {
+                showMessage(`No complaint was found for "${trackingId}". Check the ID and try again.`);
+            } else {
+                const detail = data && data.detail ? String(data.detail) : `HTTP ${response.status}`;
+                showMessage(`The server could not retrieve this complaint (${detail}).`);
+            }
+            console.error("ROADFIX tracking API error:", response.status, data || responseText);
+            return;
+        }
+
+        if (!data || !data.tracking_id) {
+            reportPanel.style.display = "none";
+            showMessage("The server responded, but the complaint data was incomplete. Check the backend response.");
+            console.error("Unexpected tracking response:", responseText);
+            return;
+        }
+
+        document.getElementById("displayTrackingNumber").textContent = data.tracking_id;
+        document.getElementById("problem").textContent = data.problem_type || "-";
+        document.getElementById("reporterName").textContent = data.name || "-";
+        document.getElementById("submittedAt").textContent = data.created_at
+            ? new Date(data.created_at).toLocaleString()
+            : "-";
+        document.getElementById("currentStatus").textContent = data.status || "Submitted";
+        document.getElementById("priority").textContent = data.priority || "-";
+        document.getElementById("description").textContent = data.description || "-";
+
+        updateStatusTimeline(data.status || "Submitted");
+        reportPanel.style.display = "block";
+        message.className = "message";
+        message.textContent = "";
+
+        const localReport = {
+            trackingNumber: data.tracking_id,
+            problem: data.problem_type,
+            reporterName: data.name,
+            phoneNumber: data.phone,
+            problemDescription: data.description,
+            latitude: data.latitude,
+            longitude: data.longitude,
+            priority: data.priority,
+            status: data.status,
+            submittedAt: data.created_at ? new Date(data.created_at).toLocaleString() : "-"
+        };
+        localStorage.setItem("roadfixReport", JSON.stringify(localReport));
+    } catch (error) {
+        console.error("ROADFIX tracking error:", error);
+        reportPanel.style.display = "none";
+        showMessage("Unable to connect to the ROADFIX server. Make sure the backend is running and try again.");
+    } finally {
+        button.disabled = false;
+        button.textContent = "🔎 Track Complaint";
+    }
+}
+
+function updateStatusTimeline(status) {
+    const items = {
+        submitted: document.getElementById("statusSubmitted"),
+        verified: document.getElementById("statusVerified"),
+        assigned: document.getElementById("statusAssigned"),
+        work: document.getElementById("statusWork"),
+        completed: document.getElementById("statusCompleted")
+    };
+    Object.values(items).forEach(item => item.classList.remove("completed", "current"));
+
+    const current = String(status || "Submitted").trim().toLowerCase().replace(/[_-]+/g, " ");
+    const stages = ["submitted", "verified", "assigned", "in progress", "completed"];
+    let currentIndex;
+
+    if (current === "work in progress") currentIndex = 3;
+    else currentIndex = stages.indexOf(current);
+
+    // Treat other known non-terminal states as submitted until their stage is mapped.
+    if (currentIndex < 0) currentIndex = 0;
+
+    const orderedItems = [items.submitted, items.verified, items.assigned, items.work, items.completed];
+    orderedItems.forEach((item, index) => {
+        if (index < currentIndex) item.classList.add("completed");
+        else if (index === currentIndex) item.classList.add("current");
+    });
+    if (currentIndex === 4) orderedItems.forEach(item => item.classList.add("completed"));
+}
+
+document.getElementById("trackingInput").addEventListener("keydown", event => {
+    if (event.key === "Enter") trackComplaint();
+});
+
+function newSearch() {
+    document.getElementById("trackingInput").value = "";
+    document.getElementById("report").style.display = "none";
+    const message = document.getElementById("message");
+    message.className = "message";
+    message.textContent = "";
+    document.getElementById("trackingInput").focus();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+function goBack() { window.location.href = "index.html"; }
+function goHome() { window.location.href = "index.html"; }
+
+// Support an optional tracking ID in the URL, e.g. track.html?id=RDF-20261009-6505
+const initialTrackingId = new URLSearchParams(window.location.search).get("id");
+if (initialTrackingId) {
+    document.getElementById("trackingInput").value = initialTrackingId;
+    trackComplaint();
+}
+</script>
+</body>
+</html>

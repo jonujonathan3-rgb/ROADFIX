@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>ROADFIX - Declaration</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+
+            width: 100%;
+            height: 100%;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+
+        body {
+
+            width: 100%;
+            min-height: 100vh;
+
+            color: #172033;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 25px;
+
+            overflow-y: auto;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    #e8f3ff 0%,
+                    #ffffff 50%,
+                    #eef7ff 100%
+                );
+        }
+
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
+
+        .page-container {
+
+            width: 100%;
+
+            max-width: 1000px;
+        }
+
+
+        /* =========================
+           TOP PAGE HEADING
+        ========================= */
+
+        .top-heading {
+
+            text-align: center;
+
+            margin-bottom: 25px;
+        }
+
+
+        .top-heading h1 {
+
+            font-size: 34px;
+
+            color: #087cf2;
+
+            font-weight: 800;
+
+            margin-bottom: 8px;
+        }
+
+
+        .top-heading p {
+
+            font-size: 15px;
+
+            color: #667085;
+
+            line-height: 1.5;
+        }
+
+
+        .top-line {
+
+            width: 80px;
+
+            height: 4px;
+
+            background: #ffc400;
+
+            border-radius: 10px;
+
+            margin: 12px auto 0;
+        }
+
+
+        /* =========================
+           MAIN CARD
+        ========================= */
+
+        .declaration-card {
+
+            width: 100%;
+
+            background: #ffffff;
+
+            border-radius: 22px;
+
+            padding: 38px 45px;
+
+            box-shadow:
+
+                0 20px 60px
+                rgba(0, 60, 120, 0.18);
+
+            border-top:
+                5px solid #087cf2;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+
+            text-align: center;
+
+            margin-bottom: 25px;
+        }
+
+
+        .logo {
+
+            font-size: 34px;
+
+            font-weight: 800;
+
+            color: #087cf2;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 7px;
+        }
+
+
+        .header h2 {
+
+            font-size: 27px;
+
+            color: #172033;
+
+            margin-bottom: 8px;
+        }
+
+
+        .header p {
+
+            color: #667085;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           DECLARATION
+        ========================= */
+
+        .declaration-box {
+
+            background: #f3f8ff;
+
+            border-left:
+                5px solid #087cf2;
+
+            padding: 22px;
+
+            border-radius: 12px;
+
+            margin-bottom: 22px;
+        }
+
+
+        .declaration-box h3 {
+
+            font-size: 20px;
+
+            margin-bottom: 13px;
+
+            color: #087cf2;
+        }
+
+
+        .declaration-box p {
+
+            font-size: 15px;
+
+            line-height: 1.7;
+
+            color: #475467;
+
+            margin-bottom: 9px;
+        }
+
+
+        .declaration-box p:last-child {
+
+            margin-bottom: 0;
+        }
+
+
+        /* =========================
+           TERMS
+        ========================= */
+
+        .terms-title {
+
+            font-size: 20px;
+
+            margin-bottom: 14px;
+
+            color: #172033;
+        }
+
+
+        .terms-list {
+
+            background: #fafafa;
+
+            border: 1px solid #e4e7ec;
+
+            border-radius: 12px;
+
+            padding: 20px 25px;
+
+            margin-bottom: 22px;
+        }
+
+
+        .terms-list ul {
+
+            padding-left: 20px;
+        }
+
+
+        .terms-list li {
+
+            font-size: 14px;
+
+            line-height: 1.55;
+
+            color: #475467;
+
+            margin-bottom: 10px;
+        }
+
+
+        .terms-list li:last-child {
+
+            margin-bottom: 0;
+        }
+
+
+        /* =========================
+           IMPORTANT NOTICE
+        ========================= */
+
+        .notice {
+
+            display: flex;
+
+            gap: 12px;
+
+            align-items: flex-start;
+
+            background: #fff8e1;
+
+            border: 1px solid #ffe082;
+
+            border-radius: 11px;
+
+            padding: 15px;
+
+            margin-bottom: 22px;
+        }
+
+
+        .notice-icon {
+
+            font-size: 21px;
+
+            flex-shrink: 0;
+        }
+
+
+        .notice-text {
+
+            font-size: 14px;
+
+            line-height: 1.55;
+
+            color: #5f4b00;
+        }
+
+
+        .notice-text strong {
+
+            color: #3f3200;
+        }
+
+
+        /* =========================
+           AGREEMENT
+        ========================= */
+
+        .agreement {
+
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 13px;
+
+            background:
+
+                linear-gradient(
+                    90deg,
+                    #eef6ff,
+                    #f7fbff
+                );
+
+            padding: 17px;
+
+            border-radius: 12px;
+
+            border: 1px solid #cfe4ff;
+        }
+
+
+        .agreement input {
+
+            width: 21px;
+
+            height: 21px;
+
+            margin-top: 2px;
+
+            cursor: pointer;
+
+            accent-color: #087cf2;
+
+            flex-shrink: 0;
+        }
+
+
+        .agreement label {
+
+            font-size: 14px;
+
+            line-height: 1.6;
+
+            cursor: pointer;
+
+            color: #344054;
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .button-area {
+
+            margin-top: 25px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+
+        .back-button {
+
+            border: none;
+
+            background: transparent;
+
+            color: #667085;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            padding: 12px 5px;
+        }
+
+
+        .back-button:hover {
+
+            color: #087cf2;
+        }
+
+
+        .proceed-button {
+
+            border: none;
+
+            padding: 15px 28px;
+
+            border-radius: 32px;
+
+            background:
+
+                linear-gradient(
+                    90deg,
+                    #087cf2,
+                    #0968d4
+                );
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            box-shadow:
+
+                0 8px 22px
+                rgba(8, 124, 242, 0.30);
+
+            transition: 0.3s;
+        }
+
+
+        .proceed-button:hover:not(:disabled) {
+
+            transform: translateY(-3px);
+
+            box-shadow:
+
+                0 12px 28px
+                rgba(8, 124, 242, 0.42);
+        }
+
+
+        .proceed-button:disabled {
+
+            background: #b8c2cc;
+
+            cursor: not-allowed;
+
+            box-shadow: none;
+
+            transform: none;
+        }
+
+
+        .arrow {
+
+            font-size: 21px;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer-text {
+
+            text-align: center;
+
+            margin-top: 18px;
+
+            font-size: 12px;
+
+            color: #98a2b3;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            body {
+
+                padding: 18px 12px;
+
+                align-items: flex-start;
+            }
+
+
+            .top-heading {
+
+                margin-top: 10px;
+
+                margin-bottom: 20px;
+            }
+
+
+            .top-heading h1 {
+
+                font-size: 26px;
+            }
+
+
+            .top-heading p {
+
+                font-size: 13px;
+            }
+
+
+            .declaration-card {
+
+                padding: 27px 20px;
+
+                border-radius: 16px;
+            }
+
+
+            .logo {
+
+                font-size: 29px;
+            }
+
+
+            .header h2 {
+
+                font-size: 23px;
+            }
+
+
+            .terms-list {
+
+                padding: 17px;
+            }
+
+
+            .terms-list li {
+
+                font-size: 13px;
+            }
+
+
+            .button-area {
+
+                flex-direction: column-reverse;
+
+                gap: 10px;
+
+                align-items: stretch;
+            }
+
+
+            .proceed-button {
+
+                width: 100%;
+
+                justify-content: center;
+            }
+
+
+            .back-button {
+
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+<link rel="stylesheet" href="css/roadfix-modern.css">
+</head>
+
+
+<body>
+
+
+    <div class="page-container">
+
+
+        <!-- =========================
+             TOP HEADING
+        ========================= -->
+
+        <div class="top-heading">
+
+            <h1>
+                Before You Report a Road Problem
+            </h1>
+
+            <p>
+                Please review the declaration and reporting
+                guidelines before submitting an issue.
+            </p>
+
+            <div class="top-line"></div>
+
+        </div>
+
+
+        <!-- =========================
+             MAIN CARD
+        ========================= -->
+
+        <div class="declaration-card">
+
+
+            <!-- HEADER -->
+
+            <div class="header">
+
+                <div class="logo">
+                    ROADFIX
+                </div>
+
+                <h2>
+                    Road Problem Reporting
+                </h2>
+
+                <p>
+                    Please read the declaration and terms
+                    before continuing.
+                </p>
+
+            </div>
+
+
+            <!-- DECLARATION -->
+
+            <div class="declaration-box">
+
+                <h3>
+                    Declaration
+                </h3>
+
+                <p>
+                    I understand that the information provided
+                    in this road problem report should be accurate
+                    and related to an actual road or public
+                    safety issue.
+                </p>
+
+                <p>
+                    I agree to provide correct information,
+                    photographs and location details wherever
+                    possible to help the concerned authorities
+                    identify and resolve the issue.
+                </p>
+
+            </div>
+
+
+            <!-- TERMS -->
+
+            <h3 class="terms-title">
+
+                Conditions &amp; Terms
+
+            </h3>
+
+
+            <div class="terms-list">
+
+                <ul>
+
+                    <li>
+                        I will provide accurate and truthful
+                        information about the road problem.
+                    </li>
+
+                    <li>
+                        I will select the appropriate category
+                        for the reported road or safety issue.
+                    </li>
+
+                    <li>
+                        I will provide the correct location or
+                        nearby landmark whenever possible.
+                    </li>
+
+                    <li>
+                        I will upload clear photographs that
+                        represent the actual road condition,
+                        if photographs are available.
+                    </li>
+
+                    <li>
+                        I will not intentionally submit false,
+                        misleading, abusive or duplicate reports.
+                    </li>
+
+                    <li>
+                        The report may be reviewed and verified
+                        by the concerned authority before action
+                        is taken.
+                    </li>
+
+                    <li>
+                        Submitting a report does not guarantee
+                        immediate repair or resolution.
+                    </li>
+
+                    <li>
+                        ROADFIX may use submitted information
+                        to assess road safety and prioritize
+                        maintenance work.
+                    </li>
+
+                    <li>
+                        Emergency situations requiring immediate
+                        assistance should be reported to the
+                        appropriate emergency services.
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- NOTICE -->
+
+            <div class="notice">
+
+                <div class="notice-icon">
+                    ⚠️
+                </div>
+
+                <div class="notice-text">
+
+                    <strong>Important:</strong>
+
+                    Please make sure the information you provide
+                    is genuine and related to a real road or
+                    public safety issue.
+
+                </div>
+
+            </div>
+
+
+            <!-- AGREEMENT -->
+
+            <div class="agreement">
+
+                <input
+                    type="checkbox"
+                    id="agreeCheckbox"
+                    onchange="enableProceed()">
+
+
+                <label for="agreeCheckbox">
+
+                    I have read and understood the declaration,
+                    conditions and terms above. I confirm that
+                    the information I provide will be accurate
+                    to the best of my knowledge and I agree to
+                    continue with the ROADFIX reporting process.
+
+                </label>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="button-area">
+
+
+                <button
+                    class="back-button"
+                    onclick="window.location.href='index.html'">
+
+                    ← Back
+
+                </button>
+
+
+                <button
+                    id="proceedButton"
+                    class="proceed-button"
+                    disabled
+                    onclick="proceedNext()">
+
+                    Proceed Next
+
+                    <span class="arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+            </div>
+
+
+            <div class="footer-text">
+
+                ROADFIX • Road Safety &amp; Maintenance Platform
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <script>
+
+        function enableProceed() {
+
+            const checkbox =
+                document.getElementById(
+                    "agreeCheckbox"
+                );
+
+            const button =
+                document.getElementById(
+                    "proceedButton"
+                );
+
+            button.disabled =
+                !checkbox.checked;
+
+        }
+
+
+        function proceedNext() {
+
+            window.location.href =
+                "report.html";
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>

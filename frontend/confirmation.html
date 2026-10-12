@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ROADFIX - Report Submitted</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            background: linear-gradient(
+                135deg,
+                #eaf4ff,
+                #ffffff
+            );
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 25px;
+
+            color: #333;
+        }
+
+
+        .container {
+
+            width: 100%;
+
+            max-width: 750px;
+
+            background: white;
+
+            border-radius: 20px;
+
+            padding: 35px;
+
+            box-shadow:
+                0 10px 35px rgba(0, 0, 0, 0.12);
+        }
+
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+
+            text-align: center;
+
+            margin-bottom: 25px;
+        }
+
+
+        .logo {
+
+            display: inline-block;
+
+            background: #1976d2;
+
+            color: white;
+
+            padding: 8px 18px;
+
+            border-radius: 8px;
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .success-icon {
+
+            width: 75px;
+
+            height: 75px;
+
+            margin: 0 auto 15px;
+
+            border-radius: 50%;
+
+            background: #e8f8ee;
+
+            color: #16803c;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 42px;
+
+            font-weight: bold;
+        }
+
+
+        h1 {
+
+            color: #16803c;
+
+            font-size: 28px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .subtitle {
+
+            color: #666;
+
+            font-size: 15px;
+
+            line-height: 1.6;
+        }
+
+
+
+        /* =========================
+           TRACKING BOX
+        ========================= */
+
+        .tracking-box {
+
+            text-align: center;
+
+            background: #f0f7ff;
+
+            border: 2px dashed #1976d2;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            margin: 25px 0;
+        }
+
+
+        .tracking-title {
+
+            color: #555;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            margin-bottom: 12px;
+
+            letter-spacing: 1px;
+        }
+
+
+        .tracking-number-row {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+        }
+
+
+        #trackingNumber {
+
+            color: #1976d2;
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+            word-break: break-word;
+        }
+
+
+
+        /* =========================
+           COPY BUTTON
+        ========================= */
+
+        .copy-button {
+
+            border: none;
+
+            background: #1976d2;
+
+            width: 42px;
+
+            height: 42px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            position: relative;
+
+            transition: 0.2s;
+        }
+
+
+        .copy-button:hover {
+
+            background: #125da8;
+
+            transform: scale(1.05);
+        }
+
+
+        .copy-button:active {
+
+            transform: scale(0.95);
+        }
+
+
+
+        /* =========================
+           OVERLAPPING COPY ICON
+        ========================= */
+
+        .copy-icon {
+
+            width: 15px;
+
+            height: 15px;
+
+            border: 2px solid white;
+
+            border-radius: 3px;
+
+            position: relative;
+        }
+
+
+        .copy-icon::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 15px;
+
+            height: 15px;
+
+            border: 2px solid white;
+
+            border-radius: 3px;
+
+            left: -5px;
+
+            top: -5px;
+
+            background: transparent;
+        }
+
+
+        /* =========================
+           COPIED MESSAGE
+        ========================= */
+
+        .copy-message {
+
+            display: none;
+
+            color: #16803c;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            margin-top: 8px;
+        }
+
+
+
+        /* =========================
+           INFORMATION
+        ========================= */
+
+        .section-title {
+
+            font-size: 19px;
+
+            color: #222;
+
+            margin-bottom: 15px;
+
+            border-left: 4px solid #1976d2;
+
+            padding-left: 10px;
+        }
+
+
+        .info-card {
+
+            background: #f8fafc;
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .info-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding: 12px 0;
+
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+
+        .info-row:last-child {
+
+            border-bottom: none;
+        }
+
+
+        .info-label {
+
+            color: #666;
+
+            font-weight: bold;
+        }
+
+
+        .info-value {
+
+            color: #222;
+
+            text-align: right;
+
+            word-break: break-word;
+        }
+
+
+        .status {
+
+            color: #16803c;
+
+            font-weight: bold;
+        }
+
+
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .button-container {
+
+            display: flex;
+
+            gap: 15px;
+
+            margin-top: 25px;
+        }
+
+
+        .button {
+
+            flex: 1;
+
+            border: none;
+
+            padding: 14px 20px;
+
+            border-radius: 9px;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .track-button {
+
+            background: #1976d2;
+
+            color: white;
+        }
+
+
+        .track-button:hover {
+
+            background: #125da8;
+        }
+
+
+        .home-button {
+
+            background: #e5e7eb;
+
+            color: #333;
+        }
+
+
+        .home-button:hover {
+
+            background: #d1d5db;
+        }
+
+
+
+        /* =========================
+           NOTE
+        ========================= */
+
+        .note {
+
+            margin-top: 25px;
+
+            padding: 15px;
+
+            background: #fff8e1;
+
+            border-left: 4px solid #f59e0b;
+
+            border-radius: 7px;
+
+            color: #665000;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+
+            text-align: center;
+
+            color: #888;
+
+            font-size: 12px;
+
+            margin-top: 25px;
+        }
+
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            body {
+
+                padding: 15px;
+            }
+
+
+            .container {
+
+                padding: 25px 18px;
+            }
+
+
+            h1 {
+
+                font-size: 23px;
+            }
+
+
+            #trackingNumber {
+
+                font-size: 18px;
+            }
+
+
+            .info-row {
+
+                flex-direction: column;
+
+                gap: 5px;
+            }
+
+
+            .info-value {
+
+                text-align: left;
+            }
+
+
+            .button-container {
+
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+<link rel="stylesheet" href="css/roadfix-modern.css">
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <div class="header">
+
+
+        <div class="logo">
+
+            ROADFIX
+
+        </div>
+
+
+        <div class="success-icon">
+
+            ✓
+
+        </div>
+
+
+        <h1>
+
+            Report Submitted Successfully!
+
+        </h1>
+
+
+        <p class="subtitle">
+
+            Your road problem has been successfully
+            registered with ROADFIX.
+
+            Please save your tracking number
+            to check the status of your complaint.
+
+        </p>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         TRACKING NUMBER
+    ========================== -->
+
+    <div class="tracking-box">
+
+
+        <div class="tracking-title">
+
+            YOUR REPORT TRACKING NUMBER
+
+        </div>
+
+
+        <div class="tracking-number-row">
+
+
+            <span id="trackingNumber">
+
+                Loading...
+
+            </span>
+
+
+            <!-- COPY BUTTON -->
+
+            <button
+                type="button"
+                class="copy-button"
+                onclick="copyTrackingNumber()"
+                title="Copy Tracking ID"
+                aria-label="Copy Tracking ID">
+
+                <span class="copy-icon"></span>
+
+            </button>
+
+
+        </div>
+
+
+        <!-- COPIED MESSAGE -->
+
+        <span
+            id="copyMessage"
+            class="copy-message">
+
+            ✓ Tracking ID Copied!
+
+        </span>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         REPORT INFORMATION
+    ========================== -->
+
+    <h2 class="section-title">
+
+        Report Information
+
+    </h2>
+
+
+    <div class="info-card">
+
+
+        <!-- PROBLEM -->
+
+        <div class="info-row">
+
+            <span class="info-label">
+
+                Problem
+
+            </span>
+
+
+            <span
+                class="info-value"
+                id="problem">
+
+                -
+
+            </span>
+
+        </div>
+
+
+
+        <!-- REPORTER -->
+
+        <div class="info-row">
+
+            <span class="info-label">
+
+                Reporter
+
+            </span>
+
+
+            <span
+                class="info-value"
+                id="reporterName">
+
+                -
+
+            </span>
+
+        </div>
+
+
+
+        <!-- PHONE -->
+
+        <div class="info-row">
+
+            <span class="info-label">
+
+                Phone
+
+            </span>
+
+
+            <span
+                class="info-value"
+                id="phoneNumber">
+
+                -
+
+            </span>
+
+        </div>
+
+
+
+        <!-- STATUS -->
+
+        <div class="info-row">
+
+            <span class="info-label">
+
+                Status
+
+            </span>
+
+
+            <span
+                class="info-value status"
+                id="status">
+
+                Submitted
+
+            </span>
+
+        </div>
+
+
+
+        <!-- SUBMITTED DATE -->
+
+        <div class="info-row">
+
+            <span class="info-label">
+
+                Submitted On
+
+            </span>
+
+
+            <span
+                class="info-value"
+                id="submittedAt">
+
+                -
+
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         BUTTONS
+    ========================== -->
+
+    <div class="button-container">
+
+
+        <button
+            class="button track-button"
+            onclick="trackReport()">
+
+            🔎 Track Report
+
+        </button>
+
+
+        <button
+            class="button home-button"
+            onclick="goHome()">
+
+            🏠 Back to Home
+
+        </button>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         NOTE
+    ========================== -->
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        Please save or copy your Tracking ID.
+
+        You will need this number to track
+        your road complaint.
+
+    </div>
+
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <div class="footer">
+
+        ROADFIX — Road Maintenance & Safety Platform
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+    /* =========================================
+       LOAD SAVED REPORT
+    ========================================== */
+
+
+    const savedReport =
+        localStorage.getItem("roadfixReport");
+
+
+    if (savedReport) {
+
+
+        try {
+
+
+            const report =
+                JSON.parse(savedReport);
+
+
+            document.getElementById(
+                "trackingNumber"
+            ).innerText =
+                report.trackingNumber || "-";
+
+
+            document.getElementById(
+                "problem"
+            ).innerText =
+                report.problem || "-";
+
+
+            document.getElementById(
+                "reporterName"
+            ).innerText =
+                report.reporterName || "-";
+
+
+            document.getElementById(
+                "phoneNumber"
+            ).innerText =
+                report.phoneNumber || "-";
+
+
+            document.getElementById(
+                "status"
+            ).innerText =
+                report.status || "Submitted";
+
+
+            document.getElementById(
+                "submittedAt"
+            ).innerText =
+                report.submittedAt || "-";
+
+
+        }
+
+
+        catch (error) {
+
+
+            console.error(
+                "Unable to read report:",
+                error
+            );
+
+
+            showNoReport();
+
+
+        }
+
+
+    }
+
+
+    else {
+
+
+        showNoReport();
+
+
+    }
+
+
+
+    /* =========================================
+       SHOW NO REPORT
+    ========================================== */
+
+
+    function showNoReport() {
+
+
+        document.getElementById(
+            "trackingNumber"
+        ).innerText =
+            "No Report Found";
+
+
+        document.getElementById(
+            "problem"
+        ).innerText =
+            "-";
+
+
+        document.getElementById(
+            "reporterName"
+        ).innerText =
+            "-";
+
+
+        document.getElementById(
+            "phoneNumber"
+        ).innerText =
+            "-";
+
+
+        document.getElementById(
+            "status"
+        ).innerText =
+            "-";
+
+
+        document.getElementById(
+            "submittedAt"
+        ).innerText =
+            "-";
+
+
+    }
+
+
+
+    /* =========================================
+       COPY TRACKING NUMBER
+    ========================================== */
+
+
+    function copyTrackingNumber() {
+
+
+        const trackingNumber =
+
+            document
+                .getElementById("trackingNumber")
+                .innerText
+                .trim();
+
+
+
+        /* CHECK VALID TRACKING ID */
+
+        if (
+
+            trackingNumber === "" ||
+
+            trackingNumber === "Loading..." ||
+
+            trackingNumber === "No Report Found"
+
+        ) {
+
+
+            alert(
+                "No valid Tracking ID available."
+            );
+
+
+            return;
+
+        }
+
+
+
+        /* =====================================
+           MODERN COPY METHOD
+        ====================================== */
+
+
+        if (navigator.clipboard) {
+
+
+            navigator.clipboard.writeText(
+                trackingNumber
+            )
+
+
+            .then(function() {
+
+
+                showCopiedMessage();
+
+
+            })
+
+
+            .catch(function() {
+
+
+                fallbackCopy(
+                    trackingNumber
+                );
+
+
+            });
+
+
+        }
+
+
+        else {
+
+
+            fallbackCopy(
+                trackingNumber
+            );
+
+
+        }
+
+
+    }
+
+
+
+    /* =========================================
+       FALLBACK COPY METHOD
+    ========================================== */
+
+
+    function fallbackCopy(text) {
+
+
+        const textarea =
+            document.createElement("textarea");
+
+
+        textarea.value = text;
+
+
+        textarea.style.position =
+            "fixed";
+
+
+        textarea.style.left =
+            "-9999px";
+
+
+        document.body.appendChild(
+            textarea
+        );
+
+
+        textarea.focus();
+
+
+        textarea.select();
+
+
+        try {
+
+
+            document.execCommand(
+                "copy"
+            );
+
+
+            showCopiedMessage();
+
+
+        }
+
+
+        catch (error) {
+
+
+            alert(
+                "Unable to copy Tracking ID."
+            );
+
+
+        }
+
+
+        document.body.removeChild(
+            textarea
+        );
+
+
+    }
+
+
+
+    /* =========================================
+       SHOW COPIED MESSAGE
+    ========================================== */
+
+
+    function showCopiedMessage() {
+
+
+        const message =
+
+            document.getElementById(
+                "copyMessage"
+            );
+
+
+        message.style.display =
+            "block";
+
+
+        setTimeout(function() {
+
+
+            message.style.display =
+                "none";
+
+
+        }, 2000);
+
+
+    }
+
+
+
+    /* =========================================
+       TRACK REPORT
+    ========================================== */
+
+
+    function trackReport() {
+
+
+        window.location.href =
+            "track.html";
+
+
+    }
+
+
+
+    /* =========================================
+       BACK TO HOME
+    ========================================== */
+
+
+    function goHome() {
+
+
+        window.location.href =
+            "index.html";
+
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>

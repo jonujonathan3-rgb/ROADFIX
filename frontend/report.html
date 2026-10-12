@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ROADFIX - Select Problem</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eaf4ff, #ffffff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+            color: #12395b;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .step {
+            color: #1976d2;
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .problem-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .problem-card {
+            border: 2px solid #e1e8ef;
+            border-radius: 14px;
+            padding: 22px;
+            cursor: pointer;
+            transition: 0.25s;
+            background: #fff;
+        }
+
+        .problem-card:hover {
+            border-color: #1976d2;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 18px rgba(25, 118, 210, 0.12);
+        }
+
+        .problem-card h2 {
+            font-size: 19px;
+            color: #183b56;
+            margin-bottom: 8px;
+        }
+
+        .problem-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Back Button */
+        .back-button {
+            display: block;
+            margin: 30px auto 0;
+            padding: 13px 28px;
+            background: #e5e7eb;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .back-button:hover {
+            background: #d1d5db;
+        }
+
+        @media (max-width: 700px) {
+
+            .problem-list {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 27px;
+            }
+        }
+    </style>
+<link rel="stylesheet" href="css/roadfix-modern.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+
+            <div class="step">
+                STEP 1
+            </div>
+
+            <h1>
+                Select Problem Type
+            </h1>
+
+            <p>
+                Select the road problem you want to report.
+            </p>
+
+        </div>
+
+
+        <div class="problem-list">
+
+
+            <!-- 1. Road Damage -->
+            <div
+                class="problem-card"
+                onclick="openPage('remaining.html', 'Road Damage')"
+            >
+
+                <h2>
+                    🛣️ Road Damage
+                </h2>
+
+                <p>
+                    Potholes, cracks, broken roads
+                </p>
+
+            </div>
+
+
+            <!-- 2. Street Light -->
+            <div
+                class="problem-card"
+                onclick="openPage('remaining.html', 'Street Light Not Working')"
+            >
+
+                <h2>
+                    💡 Street Light Not Working
+                </h2>
+
+                <p>
+                    Damaged or non-working light
+                </p>
+
+            </div>
+
+
+            <!-- 3. Speed Breaker -->
+            <div
+                class="problem-card"
+                onclick="openPage('remaining.html', 'Speed Breaker Required')"
+            >
+
+                <h2>
+                    🚧 Speed Breaker Required
+                </h2>
+
+                <p>
+                    School zone / dangerous location
+                </p>
+
+            </div>
+
+
+            <!-- 4. Missing Road Sign -->
+            <div
+                class="problem-card"
+                onclick="openPage('remaining.html', 'Missing Road Sign')"
+            >
+
+                <h2>
+                    ⚠️ Missing Road Sign
+                </h2>
+
+                <p>
+                    Missing, damaged or faded sign
+                </p>
+
+            </div>
+
+
+            <!-- 5. Zebra Crossing -->
+            <div
+                class="problem-card"
+                onclick="openPage('remaining.html', 'Zebra Crossing Required')"
+            >
+
+                <h2>
+                    🚶 Zebra Crossing Required
+                </h2>
+
+                <p>
+                    Missing pedestrian crossing
+                </p>
+
+            </div>
+
+
+            <!-- 6. Road Marking -->
+            <div
+                class="problem-card"
+                onclick="openPage('remaining.html', 'Road Marking Missing')"
+            >
+
+                <h2>
+                    🛑 Road Marking Missing
+                </h2>
+
+                <p>
+                    Faded or missing road markings
+                </p>
+
+            </div>
+
+
+            <!-- 7. Traffic Signal -->
+            <div
+                class="problem-card"
+                onclick="openPage('remaining.html', 'Traffic Signal Problem')"
+            >
+
+                <h2>
+                    🚦 Traffic Signal Problem
+                </h2>
+
+                <p>
+                    Damaged or non-working signal
+                </p>
+
+            </div>
+
+
+            <!-- 8. Other -->
+            <div
+                class="problem-card"
+                onclick="openPage('remaining.html', 'Other Safety Issue')"
+            >
+
+                <h2>
+                    📋 Other Safety Issue
+                </h2>
+
+                <p>
+                    Other road-related problem
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Back Button -->
+        <button class="back-button" onclick="goBack()">
+            ← Back
+        </button>
+
+    </div>
+
+
+    <script>
+
+        // Save selected problem and open next page
+        function openPage(page, problem) {
+
+            localStorage.setItem(
+                "selectedProblem",
+                problem
+            );
+
+            window.location.href = page;
+        }
+
+
+        // Go back to declaration page
+        function goBack() {
+
+            window.location.href = "declaration.html";
+
+        }
+
+    </script>
+
+</body>
+</html>

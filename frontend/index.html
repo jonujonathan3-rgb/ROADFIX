@@ -1,0 +1,729 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>ROADFIX</title>
+
+
+    <style>
+
+        /* =========================
+           RESET
+        ========================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+
+            width: 100%;
+            height: 100%;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+
+        body {
+
+            overflow: hidden;
+
+            background: #001d3d;
+        }
+
+
+     
+/* =========================
+   MAIN PAGE WITH RS.jpeg BACKGROUND
+========================= */
+
+.roadfix-page {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    color: white;
+
+    background-image:
+        linear-gradient(
+            90deg,
+            rgba(0, 29, 61, 0.95) 0%,
+            rgba(0, 35, 72, 0.82) 28%,
+            rgba(0, 35, 72, 0.35) 58%,
+            rgba(0, 0, 0, 0.05) 100%
+        ),
+        url("RS.jpeg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+
+        /* =========================
+           EXTRA DARK OVERLAY
+        ========================= */
+
+        .overlay {
+
+            position: absolute;
+
+            inset: 0;
+
+            background:
+
+                    180deg,
+                    rgba(0, 20, 45, 0.15),
+                    rgba(0, 20, 45, 0.05) 60%,
+                    rgba(0, 15, 35, 0.45)
+                );
+
+            pointer-events: none;
+        }
+
+
+        /* =========================
+           MAIN CONTENT
+        ========================= */
+
+        .content {
+
+            position: absolute;
+
+            left: 6.5%;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            width: 650px;
+
+            max-width: 48%;
+
+            z-index: 5;
+        }
+
+
+        /* =========================
+           SMALL TITLE
+        ========================= */
+
+        .small-title {
+
+            display: inline-block;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            letter-spacing: 3px;
+
+            color: #ffc400;
+
+            margin-bottom: 22px;
+
+            text-transform: uppercase;
+        }
+
+
+        .small-title::after {
+
+            content: "";
+
+            display: block;
+
+            width: 90px;
+
+            height: 5px;
+
+            background: #ffc400;
+
+            margin-top: 12px;
+
+            border-radius: 10px;
+        }
+
+
+        /* =========================
+           MAIN HEADING
+        ========================= */
+
+        h1 {
+
+            font-size: 64px;
+
+            line-height: 1.05;
+
+            font-weight: 800;
+
+            letter-spacing: -2px;
+
+            margin-bottom: 28px;
+
+            text-shadow:
+
+                0 4px 20px
+                rgba(0, 0, 0, 0.35);
+        }
+
+
+        .yellow {
+
+            color: #ffc400;
+        }
+
+
+        /* =========================
+           DESCRIPTION
+        ========================= */
+
+        .description {
+
+            font-size: 18px;
+
+            line-height: 1.65;
+
+            color: #f4f7fb;
+
+            max-width: 600px;
+
+            margin-bottom: 32px;
+
+            text-shadow:
+
+                0 2px 10px
+                rgba(0, 0, 0, 0.35);
+        }
+
+
+        /* =========================
+           BUTTON CONTAINER
+        ========================= */
+
+        .button-container {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 18px;
+
+            flex-wrap: wrap;
+        }
+
+
+        /* =========================
+           COMMON BUTTON
+        ========================= */
+
+        .report-button,
+        .track-button {
+
+            border: none;
+
+            outline: none;
+
+            padding: 18px 28px;
+
+            min-width: 270px;
+
+            border-radius: 45px;
+
+            color: white;
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 18px;
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+
+        /* =========================
+           REPORT BUTTON
+        ========================= */
+
+        .report-button {
+
+            background:
+
+                linear-gradient(
+                    90deg,
+                    #087cf2,
+                    #1264e5
+                );
+
+            box-shadow:
+
+                0 12px 35px
+                rgba(0, 91, 255, 0.40);
+        }
+
+
+        .report-button:hover {
+
+            transform:
+                translateY(-4px);
+
+            box-shadow:
+
+                0 18px 40px
+                rgba(0, 91, 255, 0.55);
+        }
+
+
+        /* =========================
+           TRACK BUTTON
+        ========================= */
+
+        .track-button {
+
+            background:
+
+                linear-gradient(
+                    90deg,
+                    #ffc400,
+                    #e6a900
+                );
+
+            color: #002653;
+
+            box-shadow:
+
+                0 12px 35px
+                rgba(255, 196, 0, 0.30);
+        }
+
+
+        .track-button:hover {
+
+            transform:
+                translateY(-4px);
+
+            box-shadow:
+
+                0 18px 40px
+                rgba(255, 196, 0, 0.45);
+        }
+
+
+        /* =========================
+           BUTTON CONTENT
+        ========================= */
+
+        .report-icon,
+        .track-icon {
+
+            font-size: 25px;
+        }
+
+
+        .button-text {
+
+            flex: 1;
+
+            text-align: left;
+        }
+
+
+        .arrow {
+
+            font-size: 30px;
+
+            line-height: 1;
+        }
+
+
+        /* =========================
+           BOTTOM CURVES
+        ========================= */
+
+        .curve-yellow {
+
+            position: absolute;
+
+            left: -100px;
+
+            bottom: -115px;
+
+            width: 650px;
+
+            height: 230px;
+
+            background: #ffc400;
+
+            border-radius:
+                0 100% 0 0;
+
+            transform:
+                rotate(8deg);
+
+            z-index: 2;
+        }
+
+
+        .curve-blue {
+
+            position: absolute;
+
+            left: -120px;
+
+            bottom: -145px;
+
+            width: 700px;
+
+            height: 240px;
+
+            background: #087cf2;
+
+            border-radius:
+                0 100% 0 0;
+
+            transform:
+                rotate(8deg);
+
+            z-index: 1;
+        }
+
+
+        .curve-dark {
+
+            position: absolute;
+
+            left: -150px;
+
+            bottom: -180px;
+
+            width: 760px;
+
+            height: 250px;
+
+            background: #002653;
+
+            border-radius:
+                0 100% 0 0;
+
+            transform:
+                rotate(8deg);
+
+            z-index: 3;
+        }
+
+
+        /* =========================
+           TABLET
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .content {
+
+                left: 5%;
+
+                width: 600px;
+
+                max-width: 85%;
+            }
+
+
+            h1 {
+
+                font-size: 50px;
+            }
+
+
+            .button-container {
+
+                gap: 12px;
+            }
+
+
+            .report-button,
+            .track-button {
+
+                min-width: 240px;
+            }
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            body {
+
+                overflow: auto;
+            }
+
+
+            .roadfix-page {
+
+                min-height: 100vh;
+
+                height: auto;
+
+                background-position:
+                    65% center;
+            }
+
+
+            .content {
+
+                position: relative;
+
+                left: auto;
+
+                top: auto;
+
+                transform: none;
+
+                width: auto;
+
+                max-width: none;
+
+                padding:
+                    120px 25px
+                    180px 25px;
+            }
+
+
+            .small-title {
+
+                font-size: 12px;
+
+                letter-spacing: 2px;
+            }
+
+
+            h1 {
+
+                font-size: 42px;
+
+                line-height: 1.08;
+
+                letter-spacing: -1px;
+            }
+
+
+            .description {
+
+                font-size: 15px;
+
+                line-height: 1.6;
+            }
+
+
+            .button-container {
+
+                flex-direction: column;
+
+                align-items: stretch;
+
+                width: 100%;
+            }
+
+
+            .report-button,
+            .track-button {
+
+                width: 100%;
+
+                min-width: 0;
+
+                font-size: 16px;
+
+                padding: 16px 22px;
+            }
+
+
+            .curve-yellow {
+
+                width: 400px;
+
+                height: 150px;
+
+                left: -120px;
+
+                bottom: -90px;
+            }
+
+
+            .curve-blue {
+
+                width: 450px;
+
+                height: 160px;
+
+                left: -130px;
+
+                bottom: -110px;
+            }
+
+
+            .curve-dark {
+
+                width: 500px;
+
+                height: 170px;
+
+                left: -150px;
+
+                bottom: -130px;
+            }
+        }
+
+    </style>
+
+    <link rel="stylesheet" href="css/roadfix-modern.css">
+
+</head>
+
+
+<body>
+
+
+    <div class="roadfix-page">
+
+
+        <!-- DARK OVERLAY -->
+
+        <div class="overlay"></div>
+
+
+        <!-- MAIN CONTENT -->
+
+        <div class="content">
+
+
+            <div class="small-title">
+
+                ROAD MAINTENANCE &amp; SAFETY
+
+            </div>
+
+
+            <h1>
+
+                Road Damage Fixing<br>
+
+                <span class="yellow">
+                    Safe
+                </span>
+
+                Roads.
+
+            </h1>
+
+
+            <p class="description">
+
+                ROADFIX helps citizens and authorities identify
+                road problems, monitor safety infrastructure,
+                prioritize dangerous locations and manage
+                road repair work from reporting to completion.
+
+            </p>
+
+
+            <!-- BUTTONS -->
+
+            <div class="button-container">
+
+
+                <!-- REPORT PROBLEM -->
+
+                <button
+                    class="report-button"
+                    onclick="window.location.href='declaration.html'">
+
+                    <span class="report-icon">
+                        📝
+                    </span>
+
+
+                    <span class="button-text">
+                        Report Problem
+                    </span>
+
+
+                    <span class="arrow">
+                        → 
+                    </span>
+
+                </button>
+
+
+                <!-- TRACK COMPLAINT -->
+
+                <button
+                    class="track-button"
+                    onclick="window.location.href='track.html'">
+
+                    <span class="track-icon">
+                        🔎
+                    </span>
+
+
+                    <span class="button-text">
+                        Track Complaint
+                    </span>
+
+
+                    <span class="arrow">
+                        → 
+                    </span>
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+        <!-- BOTTOM DECORATION -->
+
+        <div class="curve-blue"></div>
+
+        <div class="curve-yellow"></div>
+
+        <div class="curve-dark"></div>
+
+
+    </div>
+
+
+</body>
+
+</html>

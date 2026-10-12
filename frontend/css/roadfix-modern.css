@@ -1,0 +1,77 @@
+/* ROADFIX Modern Design System - additive overrides */
+:root{--rf-navy:#061a33;--rf-blue:#0b6ff4;--rf-blue2:#1559d6;--rf-yellow:#ffc400;--rf-text:#0b1f35;--rf-muted:#637083;--rf-line:#dfe7f1;--rf-bg:#f4f8fc;--rf-card:rgba(255,255,255,.94);--rf-shadow:0 24px 70px rgba(8,35,70,.13)}
+*{scrollbar-width:thin;scrollbar-color:#b9c9dc transparent}
+button,input,textarea{font:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid rgba(11,111,244,.22);outline-offset:2px}
+
+/* Shared app pages */
+body{background:radial-gradient(circle at 15% 0%,#e9f3ff 0,#f6f9fd 38%,#edf3f9 100%)!important;color:var(--rf-text)}
+body:not(:has(.roadfix-page)){padding:32px!important}
+.container,.page-container{border:1px solid rgba(255,255,255,.8)!important;box-shadow:var(--rf-shadow)!important;backdrop-filter:blur(14px)}
+.header h1,.top-heading h1{letter-spacing:-1px!important;color:var(--rf-navy)!important}
+.header p,.top-heading p{color:var(--rf-muted)!important}
+.logo{font-weight:900!important;letter-spacing:3px!important;color:var(--rf-navy)!important}
+.logo span,.yellow{color:var(--rf-yellow)!important}
+
+/* Declaration */
+.page-container{max-width:1040px!important}
+.declaration-card{border:1px solid #e3ebf4!important;border-radius:24px!important;padding:38px!important}
+.declaration-box{background:linear-gradient(135deg,#f7fbff,#eef6ff)!important;border:1px solid #dce9f7!important;border-radius:18px!important}
+.notice{border:1px solid #ffe49a!important;border-radius:16px!important}
+.proceed-button,.submit-btn,.location-button{background:linear-gradient(135deg,var(--rf-blue),var(--rf-blue2))!important;box-shadow:0 12px 30px rgba(11,111,244,.22)!important}
+.proceed-button:hover:not(:disabled),.submit-btn:hover,.location-button:hover{transform:translateY(-2px);filter:brightness(1.04)}
+
+/* Problem selection */
+.problem-list{gap:16px!important}
+.problem-card{position:relative!important;overflow:hidden!important;border:1px solid #dfe8f2!important;border-radius:18px!important;background:linear-gradient(145deg,#fff,#f8fbff)!important;box-shadow:0 8px 24px rgba(8,35,70,.06)!important;transition:.25s ease!important}
+.problem-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(#0b6ff4,#ffc400);opacity:0;transition:.25s ease}
+.problem-card:hover{transform:translateY(-5px)!important;border-color:#b9d3f4!important;box-shadow:0 18px 36px rgba(8,35,70,.12)!important}
+.problem-card:hover::before{opacity:1}
+.problem-card h2{color:var(--rf-navy)!important}
+.problem-card p{color:var(--rf-muted)!important}
+
+/* Reporting form */
+.container{max-width:1040px!important;border-radius:24px!important}
+.selected-problem{background:linear-gradient(135deg,#0b6ff4,#123e9d)!important;border-radius:18px!important;box-shadow:0 15px 35px rgba(11,111,244,.2)!important}
+.section{background:rgba(255,255,255,.76)!important;border-color:#e1e9f2!important;border-radius:18px!important}
+.section h2{display:flex;align-items:center;gap:10px;color:var(--rf-navy)!important}
+.section h2::before{content:"";width:7px;height:24px;border-radius:8px;background:var(--rf-yellow);display:inline-block}
+.form-group input,.form-group textarea,.upload-box input{border:1px solid #d6e0eb!important;background:#f8fafc!important;border-radius:11px!important}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--rf-blue)!important;background:#fff!important}
+.note{color:var(--rf-muted)!important;font-size:13px!important;margin-top:7px}
+.map{box-shadow:0 8px 24px rgba(8,35,70,.08);border:1px solid #dbe5ef!important}
+.btn{border-radius:11px!important;padding:14px 22px!important}
+
+/* Confirmation */
+.success-icon{box-shadow:0 14px 35px rgba(18,181,102,.18)!important}
+.tracking-box{background:linear-gradient(135deg,#071d38,#0b3564)!important;border:1px solid rgba(255,255,255,.1)!important;box-shadow:0 18px 40px rgba(5,25,50,.18)!important;border-radius:20px!important}
+.tracking-number-row{background:rgba(255,255,255,.09)!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:14px!important}
+.info-card{border:1px solid #dfe8f1!important;border-radius:18px!important;box-shadow:0 10px 28px rgba(8,35,70,.06)!important}
+.button{border-radius:11px!important}
+
+/* Tracking */
+.search-box{border:1px solid #dfe8f1!important;border-radius:18px!important;box-shadow:0 14px 34px rgba(8,35,70,.07)!important}
+.search-button{background:linear-gradient(135deg,var(--rf-blue),var(--rf-blue2))!important}
+.tracking-number{background:linear-gradient(135deg,#071d38,#0b3564)!important;border-radius:18px!important}
+.report,.details,.status-section{border:1px solid #dfe8f1!important;border-radius:18px!important;box-shadow:0 10px 28px rgba(8,35,70,.06)!important}
+.status-dot{box-shadow:0 0 0 5px rgba(11,111,244,.08)}
+
+/* Landing page polish */
+.roadfix-page{background-color:#001d3d!important}
+.report-button,.track-button{border:1px solid rgba(255,255,255,.14)!important;backdrop-filter:blur(10px)}
+@media(max-width:700px){body:not(:has(.roadfix-page)){padding:14px!important}.declaration-card{padding:24px!important}.container{padding:24px!important}.section{padding:20px!important}}
+
+/* ROADFIX homepage background */
+body {
+    background-image:
+        linear-gradient(
+            rgba(7, 25, 48, 0.45),
+            rgba(7, 25, 48, 0.45)
+        ),
+        url("../images/roadfix-background.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
